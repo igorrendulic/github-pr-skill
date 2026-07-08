@@ -8,11 +8,12 @@ Install this repository directly into a Codex skills directory, or use a local c
 
 `github-pr` helps an agent prepare a reviewable pull request from the current repository. It guides the agent through inspecting git state, choosing or creating the right branch, committing intended changes, pushing to GitHub, and creating or updating a PR with a concise title and useful body.
 
-The skill is intentionally cautious around git state. It avoids staging unrelated local changes, checks whether the current branch already has an open PR, uses real temp files for PR bodies, and asks before user-owned decisions such as rewriting an existing PR description or carrying unpushed default-branch commits into a feature branch.
+The skill is intentionally cautious around git state. It avoids staging unrelated local changes, checks whether the current branch already has an open PR, uses real temp files for PR bodies, and asks before user-owned decisions such as rewriting an existing PR description, carrying unpushed default-branch commits into a feature branch, or routing other uncommitted changes into this PR versus a separate PR.
 
 ## What The Skill Optimizes For
 
 - Preserve unrelated local work.
+- Surface other uncommitted changes and route them to this PR or a separate PR instead of ignoring them.
 - Keep PR branches tied to the actual change intent.
 - Avoid accidental PRs from default branches with no feature work.
 - Generate PR descriptions that explain behavior, risk, and validation instead of restating the diff.
@@ -45,10 +46,11 @@ The default full workflow is:
 
 1. Inspect git status, diffs, recent commits, remotes, default branch, worktree state, and any existing open PR.
 2. Resolve whether to continue on the current branch or create a feature branch.
-3. Commit only intended changes when needed.
-4. Push the branch.
-5. Create a new PR or report the existing PR.
-6. Include validation results and any remaining user action in the final report.
+3. Ask how to route other uncommitted changes: include them in this PR, split selected paths, or keep them for a separate PR.
+4. Commit only intended changes when needed.
+5. Push the branch.
+6. Create a new PR or report the existing PR.
+7. Include validation results, separate-PR paths, and any remaining user action in the final report.
 
 You can also ask for description-only mode when you only want a title and body:
 
