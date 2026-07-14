@@ -8,7 +8,7 @@ Install this repository directly into a Codex skills directory, or use a local c
 
 `github-pr` helps an agent prepare a reviewable pull request from the current repository. It guides the agent through inspecting git state, choosing or creating the right branch, committing intended changes, pushing to GitHub, and creating or updating a PR with a concise title and useful body.
 
-The skill is intentionally cautious around git state. It avoids staging unrelated local changes, checks whether the current branch already has an open PR, uses real temp files for PR bodies, and asks before user-owned decisions such as rewriting an existing PR description, carrying unpushed default-branch commits into a feature branch, or routing other uncommitted changes into this PR versus a separate PR.
+The skill is intentionally cautious around git state. It avoids staging unrelated local changes, checks whether the current branch already has an open PR, stores PR bodies in `.agent/<plan_name>/pr_body.md` when the active session identifies a plan (with a temp-file fallback otherwise), and asks before user-owned decisions such as rewriting an existing PR description, carrying unpushed default-branch commits into a feature branch, or routing other uncommitted changes into this PR versus a separate PR.
 
 ## What The Skill Optimizes For
 
@@ -17,7 +17,7 @@ The skill is intentionally cautious around git state. It avoids staging unrelate
 - Keep PR branches tied to the actual change intent.
 - Avoid accidental PRs from default branches with no feature work.
 - Generate PR descriptions that explain behavior, risk, and validation instead of restating the diff.
-- Use `gh pr create` and `gh pr edit` safely with `--body-file`.
+- Use `gh pr create` and `gh pr edit` safely with `--body-file`, preserving PR bodies with their active plan when available.
 - Report exact blockers when auth, network, or permissions prevent pushing or PR creation.
 
 ## Repository Layout

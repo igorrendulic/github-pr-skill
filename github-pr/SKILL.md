@@ -118,7 +118,14 @@ Do not invent validation, issue-closing references, screenshots, or product beha
 
 ## Step 6: Apply With `gh`
 
-For a new PR, write the body to a temp file and call:
+Resolve the PR-body file before creating or updating the PR:
+
+- When the active session context clearly identifies a `plan_name`, create `.agent/<plan_name>/` if needed and write the body to `.agent/<plan_name>/pr_body.md`.
+- Infer `plan_name` only from the active session or plan context. Do not scan `.agent/` and guess from unrelated plan directories.
+- If no single plan name can be determined from that context, fall back to a unique real temporary file, for example `mktemp "${TMPDIR:-/private/tmp}/github-pr-body.XXXXXX.md"`.
+- Keep a plan-scoped `pr_body.md` after the GitHub command so it remains with the plan context. A fallback temp file remains temporary.
+
+For a new PR, write the body to the resolved file and call:
 
 ```bash
 gh pr create --title "<TITLE>" --body-file "$BODY_FILE"
@@ -136,7 +143,7 @@ Ask for confirmation, then call:
 gh pr edit --title "<TITLE>" --body-file "$BODY_FILE"
 ```
 
-Never pass a multi-line body through inline command substitution, stdin, or `--body "$(cat ...)"`. Use `--body-file` with a real temp file so wrappers cannot silently create an empty PR body.
+Never pass a multi-line body through inline command substitution, stdin, or `--body "$(cat ...)"`. Use `--body-file` with the resolved real file so wrappers cannot silently create an empty PR body.
 
 ## Step 7: Report
 
